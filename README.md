@@ -46,3 +46,4 @@ php artisan serve
 - Tidur Teratur (Opsional)
 - Masuk Rs (Wajib)
 - Koma 6 Bulan (Opsional)
+- Doekter Bowo Subianto Prajowitmiko (Ampuh)
