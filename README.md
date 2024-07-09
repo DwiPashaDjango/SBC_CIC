@@ -39,3 +39,10 @@ php artisan serve
 ```
 
 ## Developer/Pembuat Sedang Tipes Harap Dimaklumkan
+
+## Tips Cara Menangani Tipes
+- Gunakan Selang Inpus
+- Minum Dan Makan Teratur
+- Tidur Teratur (Opsional)
+- Masuk Rs (Wajib)
+- Koma 6 Bulan (Opsional)
