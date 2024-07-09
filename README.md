@@ -1,10 +1,13 @@
-# LuxBliss Vogue
-
-Aplikasi ini merupakan tugas kelompok mata kuliah RPL (Rekaya Perangkat Lunak) & Agile Scrum Introduction. Aplikasi ini bertujuan untuk memudahkan penyewaan Kebaya & Jas di sekitar daerah cirebon
-
-## Developer/Pembuat Aplikasi
+# SBC CIC
 
 ## Penggunan Aplikasi
+
+cloning repository github ini dengan cara 
+```php
+git clone https://github.com/DwiPashaDjango/SBC_CIC.git
+```
+
+jika belum menginstall git bisa menggunakan cara download zip pada tombol dropdown code, lalu ikuti langkah dibawah ini
 
 buka direktori project di terminal anda lalu masuk ke direktori folder LuxBliss Vogue dan ketikan kode di bawah ini
 ```php
