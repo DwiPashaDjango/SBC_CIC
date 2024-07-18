@@ -36,9 +36,6 @@
     </style>
     <style>
         .navbar-nav .nav-link {
-            width: 100%;
-            text-align: left;
-            padding-left: 1rem;
             color: #747474
         }
         .navbar-nav .nav-link:hover {
@@ -70,7 +67,7 @@
 
 <body class="layout-3">
     <div id="app">
-        <nav class="navbar navbar-expand-lg bg-white sticky-top">
+        <nav class="navbar navbar-expand-lg bg-white shadow">
             <div class="container">
                 <a class="navbar-brand" href="#">
                     <img src="{{asset('logo.jpg')}}" alt="Logo" style="height: 40px;">
