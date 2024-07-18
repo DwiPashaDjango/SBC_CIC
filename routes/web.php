@@ -62,6 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::prefix('/reports')->group(function () {
             Route::get('/', [ShowLaporanController::class, 'index'])->name('admin.laporan.index')->middleware(['role:Admin']);
+            Route::get('/pdf/{month}/{year}', [ShowLaporanController::class, 'reportMonth'])->name('admin.laporan.generatePdf2')->middleware(['role:Admin']);
             Route::get('/{id}/show', [ShowLaporanController::class, 'show'])->name('admin.laporan.show')->middleware(['role:Admin']);
             Route::get('/{id}/pdf', [ShowLaporanController::class, 'generatePdf'])->name('admin.laporan.generatePdf')->middleware(['role:Admin']);
         });

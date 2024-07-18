@@ -1,123 +1,153 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Student Busines Corner &mdash; UCIC</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Student Busines Corner &mdash; UCIC</title>
 
-  <!-- General CSS Files -->
-  <link rel="stylesheet" href="{{asset('')}}modules/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{asset('')}}modules/fontawesome/css/all.min.css">
-  <link rel="stylesheet" href="{{asset('')}}modules/fullcalendar/fullcalendar.min.css">
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="{{asset('')}}modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{asset('')}}modules/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="{{asset('')}}modules/fullcalendar/fullcalendar.min.css">
 
-  <!-- CSS Libraries -->
+    <!-- CSS Libraries -->
 
-  <!-- Template CSS -->
-  <link rel="stylesheet" href="{{asset('')}}css/style.css">
-  <link rel="stylesheet" href="{{asset('')}}css/components.css">
-<!-- Start GA -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{{asset('')}}css/style.css">
+    <link rel="stylesheet" href="{{asset('')}}css/components.css">
+    <!-- Start GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-94034622-3');
-</script>
-<!-- /END GA -->
-<style>
-    body {
-        background-color: #f7f8fd
-    }
-</style>
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-94034622-3');
+    </script>
+    <!-- /END GA -->
+    <style>
+        body {
+            background-color: #f7f8fd
+        }
+    </style>
+    <style>
+        .navbar-nav .nav-link {
+            width: 100%;
+            text-align: left;
+            padding-left: 1rem;
+            color: #747474
+        }
+        .navbar-nav .nav-link:hover {
+            color: #6777ef
+        }
+
+        @media (max-width: 991.98px) {
+            .navbar-nav {
+                width: 100%;
+                display: block;
+                background-color: #ffff; 
+                padding-top: 20px;
+                border-radius: 10px;
+                box-shadow: rgba(103, 119, 239, 0.2) rgba(0, 0, 0, 0.03);
+            }
+            .navbar-nav .nav-item {
+                width: 100%;
+                padding: 10px;
+            }
+            .navbar-nav .nav-link {
+                width: 100%;
+                text-align: left;
+                padding-left: 1rem;
+                color: #747474
+            }
+        }
+    </style>
 </head>
 
 <body class="layout-3">
-  <div id="app">
-    <nav class="navbar navbar-secondary navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="{{asset('logo.jpg')}}" alt="Logo" style="height: 40px;">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item {{request()->is('/') ? 'active' : ''}}">
-                        <a href="{{route('home')}}" class="nav-link"><i class="fas fa-home"></i><span>Beranda</span></a>
-                    </li>
-                    @auth
-                        <li class="nav-item">
-                            <a href="{{route('dashboard')}}" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a>
+    <div id="app">
+        <nav class="navbar navbar-expand-lg bg-white sticky-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="{{asset('logo.jpg')}}" alt="Logo" style="height: 40px;">
+                </a>
+                <button class="navbar-toggler" style="border: none; outline:none;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars" style="font-size: 20px"></i>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item {{request()->is('/') ? 'active-nav' : ''}}">
+                            <a href="{{route('home')}}" class="nav-link"><i class="fas fa-home" style="margin-right: 10px"></i><span>Beranda</span></a>
                         </li>
-                    @endauth
-                    @guest
-                        <li class="nav-item">
-                            <a href="{{route('register')}}" class="nav-link"><i class="fas fa-users"></i><span>Pendaftaran SBC</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{route('login')}}" class="nav-link"><i class="fas fa-sign-in-alt"></i><span>Login SBC</span></a>
-                        </li>
-                    @endguest
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-
-    <div class="main-wrapper container">
-      <br>
-      <div class="main-content" style="padding-top:80px">
-        <section class="section">
-          <div class="section-body">
-            <div class="alert alert-primary alert-has-icon">
-                <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
-                <div class="alert-body">
-                    <div class="alert-title">Studen Businses Corner &mdash; UCIC</div>
-                    Selamat Datang Di Student Busines Corner Universitas Catur Insan Cendikia
+                        @auth
+                            <li class="nav-item">
+                                <a href="{{route('dashboard')}}" class="nav-link"><i class="fas fa-fire" style="margin-right: 10px"></i><span>Dashboard</span></a>
+                            </li>
+                        @endauth @guest
+                            <li class="nav-item">
+                                <a href="{{route('register')}}" class="nav-link"><i class="fas fa-users" style="margin-right: 10px"></i><span>Pendaftaran SBC</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('login')}}" class="nav-link"><i class="fas fa-sign-in-alt" style="margin-right: 10px"></i><span>Login SBC</span></a>
+                            </li>
+                        @endguest
+                    </ul>
                 </div>
             </div>
-            <div class="card shadow">
-              <div class="card-header">
-                <h4>Kalender Penjualan</h4>
-              </div>
-              <div class="card-body">
-                <div id="myEvent"></div>
-              </div>
+        </nav>
+        <div class="main-wrapper container">
+            <div class="main-content container" style="padding-top:80px;">
+                <section class="section mt-3">
+                    <div class="section-body">
+                        <div class="alert alert-primary alert-has-icon">
+                            <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
+                            <div class="alert-body">
+                                <div class="alert-title">Studen Businses Corner &mdash; UCIC</div>
+                                Selamat Datang Di Student Busines Corner Universitas Catur Insan Cendikia
+                            </div>
+                        </div>
+                        <div class="card shadow">
+                            <div class="card-header">
+                                <h4>Kalender Penjualan</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="myEvent"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-          </div>
-        </section>
-      </div>
+        </div>
     </div>
-  </div>
 
     <x-modal id="action" size="lg">
         <div class="modal-body">
             <div class="table-responsive" id="table-append">
-                
+
             </div>
         </div>
-    </x-modal> 
+    </x-modal>
 
-  <!-- General JS Scripts -->
-  <script src="{{asset('')}}modules/jquery.min.js"></script>
-  <script src="{{asset('')}}modules/popper.js"></script>
-  <script src="{{asset('')}}modules/tooltip.js"></script>
-  <script src="{{asset('')}}modules/bootstrap/js/bootstrap.min.js"></script>
-  <script src="{{asset('')}}modules/nicescroll/jquery.nicescroll.min.js"></script>
-  <script src="{{asset('')}}modules/moment.min.js"></script>
-  <script src="{{asset('')}}js/stisla.js"></script>
-  
-  <!-- JS Libraies -->
+    <!-- General JS Scripts -->
+    <script src="{{asset('')}}modules/jquery.min.js"></script>
+    <script src="{{asset('')}}modules/popper.js"></script>
+    <script src="{{asset('')}}modules/tooltip.js"></script>
+    <script src="{{asset('')}}modules/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{asset('')}}modules/nicescroll/jquery.nicescroll.min.js"></script>
+    <script src="{{asset('')}}modules/moment.min.js"></script>
+    <script src="{{asset('')}}js/stisla.js"></script>
 
-  <!-- Page Specific JS File -->
-  
-  <!-- Template JS File -->
-  <script src="{{asset('')}}js/scripts.js"></script>
-  <script src="{{asset('')}}js/custom.js"></script>
+    <!-- JS Libraies -->
+
+    <!-- Page Specific JS File -->
+
+    <!-- Template JS File -->
+    <script src="{{asset('')}}js/scripts.js"></script>
+    <script src="{{asset('')}}js/custom.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('')}}modules/fullcalendar/fullcalendar.min.js"></script>
@@ -132,11 +162,9 @@
                 center: 'title',
                 right: 'month'
             },
-            eventSources: [
-                {
-                    url: "{{route('fetchJadwal')}}"
-                }
-            ],
+            eventSources: [{
+                url: "{{route('fetchJadwal')}}"
+            }],
             eventRender: function(event, element) {
                 const day = event.start.date();
                 if (day % 3 === 0) {
@@ -147,7 +175,7 @@
                     element.addClass('bg-primary');
                 }
 
-                element.qtip({ 
+                element.qtip({
                     content: {
                         title: event.title,
                         nim: event.nim,
@@ -227,4 +255,5 @@
         });
     </script>
 </body>
+
 </html>

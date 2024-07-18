@@ -6,7 +6,7 @@
     </div>
     <div class="sidebar-brand sidebar-brand-sm">
         <a href="#">
-            SBC
+            <img src="{{asset('logo.jpg')}}" class="mt-3" width="50" alt="">
         </a>
     </div>
     <hr class="divide">

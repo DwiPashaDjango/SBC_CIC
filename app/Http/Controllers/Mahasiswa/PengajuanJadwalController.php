@@ -123,11 +123,11 @@ class PengajuanJadwalController extends Controller
         }
 
         $data = Jadwal::find($id);
-        $data->update([
-            'tgl_penjualan' => $request->tgl_penjualan
-        ]);
+        // $data->update([
+        //     'tgl_penjualan' => $request->tgl_penjualan
+        // ]);
 
-        return response()->json(200);
+        return response()->json($data);
     }
 
     /**

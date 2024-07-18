@@ -19,14 +19,13 @@ class DashboardController extends Controller
         if ($roles === 'Admin') {
             $confirmation = Jadwal::where('status', 'pending')->count();
             $completed = Jadwal::where('status', 'completed')->where('stands_id', '!=', null)->count();
-            $canceled = Jadwal::where('status', 'tidak')->where('is_repeat', 'tidak')->count();
-            $total = Jadwal::count();
+            $canceled = Jadwal::where('status', 'tidak')->count();
 
             $mahasiswa = User::whereDoesntHave('roles', function ($query) {
                 $query->where('name', 'admin');
             })->orderBy('name', 'ASC')->count();
 
-            return view('pages.dashboard', compact('confirmation', 'completed', 'canceled', 'total', 'mahasiswa'));
+            return view('pages.dashboard', compact('confirmation', 'completed', 'canceled', 'mahasiswa'));
         } else {
             return view('pages.dashboard');
         }
@@ -38,22 +37,44 @@ class DashboardController extends Controller
         $months = range(1, 12);
         $datas = Jadwal::where('status', 'completed')
             ->where('is_repeat', 'tidak')
+            ->where('stands_id', '!=', null)
             ->select(DB::raw('MONTH(tgl_penjualan) as month'), DB::raw('COUNT(*) as count'))
             ->whereYear('tgl_penjualan', $year)
             ->groupBy('month')
             ->get();
 
-        $result = [];
+        $notSale = Jadwal::where('status', 'tidak')
+            ->where('is_repeat', 'ya')
+            ->where('stands_id', '=', null)
+            ->select(DB::raw('MONTH(tgl_penjualan) as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('tgl_penjualan', $year)
+            ->groupBy('month')
+            ->get();
+
+
+        $mhs = User::role('Mahasiswa')->whereYear('created_at', (int)$year)->count();
+
+        $sales = [];
         foreach ($months as $month) {
             $data = $datas->where('month', $month)->first();
 
-            $result[] = [
+            $sales[] = [
                 'month' => $month,
                 'count' => $data ? $data->count : 0,
             ];
         }
 
-        return response()->json($result);
+        $resultNotSale = [];
+        foreach ($months as $month) {
+            $notSales = $notSale->where('month', $month)->first();
+
+            $resultNotSale[] = [
+                'month' => $month,
+                'count' => $notSales ? $notSales->count : 0,
+            ];
+        }
+
+        return response()->json(['sales' => $sales, 'not_sales' => $resultNotSale, 'mhs' => $mhs]);
     }
 
     public function fetchJadwal()

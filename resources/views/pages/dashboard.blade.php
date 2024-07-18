@@ -58,7 +58,7 @@
                             <h4>Total Pengajuan Penjualan</h4>
                         </div>
                         <div class="card-body">
-                            {{$total}}
+                            {{ $confirmation + $completed + $canceled }}
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
             <div class="col-lg-6 col-md-12">
                 <div class="card">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Grafik Mahasiswa Berjualan Perbulan</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Grafik Penjualan</h6>
                         <div class="dropdown no-arrow">
                         <a class="dropdown-toggle btn btn-primary btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Filter 
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <canvas id="chart-penjualan" height="248"></canvas>
+                        <canvas id="chart-penjualan" height="280"></canvas>
                     </div>
                 </div>
             </div>
@@ -253,25 +253,40 @@
                             window.myChart.destroy();
                         }
 
-                        const months = data.map(entry => entry.month);
-                        const counts = data.map(entry => entry.count);
+                        const monthsSales = data.sales.map(entry => entry.month);
+                        const countsSales = data.sales.map(entry => entry.count);
+                        const countsNotSales = data.not_sales.map(entry => entry.count);
 
                         var ctx = document.getElementById('chart-penjualan').getContext('2d');
                         window.myChart = new Chart(ctx, {
                             type: 'line',
                             data: {
-                                labels: months.map(month => getMonthName(month)),
-                                datasets: [{
-                                    label: 'Jumlah Mahasiswa Berjualan Perbulan',
-                                    data: counts,
-                                    backgroundColor: 'rgba(63,82,227,.8)',
-                                    borderWidth: 0,
-                                    borderColor: 'transparent',
-                                    pointBorderWidth: 0,
-                                    pointRadius: 3.5,
-                                    pointBackgroundColor: 'transparent',
-                                    pointHoverBackgroundColor: 'rgba(63,82,227,.8)',
-                                }]
+                                labels: monthsSales.map(month => getMonthName(month)),
+                                datasets: [
+                                        {
+                                            label: 'Jumlah Mahasiswa Berjualan',
+                                            data: countsSales,
+                                            backgroundColor: 'rgba(63,82,227,.8)',
+                                            borderWidth: 0,
+                                            borderColor: 'transparent',
+                                            pointBorderWidth: 0,
+                                            pointRadius: 3.5,
+                                            pointBackgroundColor: 'transparent',
+                                            pointHoverBackgroundColor: 'rgba(63,82,227,.8)',
+                                        },
+                                        {
+                                            label: 'Jumlah Mahasiswa Tidak Bisa Berjualan',
+                                            data: countsNotSales,
+                                            borderWidth: 2,
+                                            backgroundColor: 'rgba(254,86,83,.7)',
+                                            borderWidth: 0,
+                                            borderColor: 'transparent',
+                                            pointBorderWidth: 0,
+                                            pointRadius: 3.5,
+                                            pointBackgroundColor: 'transparent',
+                                            pointHoverBackgroundColor: 'rgba(254,86,83,.7)',
+                                        }
+                                    ]
                             },
                         options: {
                                 animations: {
@@ -291,9 +306,9 @@
                                     yAxes: [{
                                         display: true,
                                         ticks: {
-                                            beginAtZero: true,
                                             steps: 10,
                                             stepValue: 5,
+                                            max: data.mhs
                                         }
                                     }]
                                 }
