@@ -11,8 +11,8 @@
     </div>
     <hr class="divide">
     <ul class="sidebar-menu">
-        <li class="menu-header">Dashboard</li>
-        <li class="{{request()->is('dashboard') ? 'active' : ''}}"><a class="nav-link" href="{{route('dashboard')}}"><i class="fas fa-fire"></i> <span>Dashboard</span></a></li>
+        <li class="menu-header">Home</li>
+        <li class="{{request()->is('dashboard') ? 'active' : ''}}"><a class="nav-link" href="{{route('dashboard')}}"><i class="fas fa-home"></i> <span>Home</span></a></li>
         @role('Admin')
             <li class="menu-header">Master Data</li>
             <li class="{{request()->is('admin/jadwals*') ? 'active' : ''}}"><a class="nav-link" href="{{route('admin.jadwal.index')}}"><i class="fas fa-calendar"></i> <span>Jadwal Penjualan</span></a></li>
