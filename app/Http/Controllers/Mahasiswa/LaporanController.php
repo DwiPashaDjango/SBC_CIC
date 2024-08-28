@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Jadwal;
 use App\Models\Laporan;
 use App\Models\Product;
 use App\Models\User;
@@ -17,14 +18,29 @@ class LaporanController extends Controller
     public function index()
     {
         $product = Product::where('users_id', Auth::user()->id)->select('name', 'id')->get();
+        $jadwalTerbaru = Jadwal::where('users_id', Auth::user()->id)->latest()->first();
+
         if (request()->ajax()) {
-            $data = Laporan::with('product')->where('users_id', Auth::user()->id)->orderBy('tgl_laporan', 'DESC')->get();
+            $start_date = request('start_date') ? Carbon::parse(request('start_date'))->startOfDay() : null;
+            // dd($start_date->format('Y-m-d'));
+            if (!empty($start_date)) {
+                $data = Laporan::with('product')
+                    ->where('users_id', Auth::user()->id)
+                    ->where('tgl_laporan', '=', $start_date->format('Y-m-d'))
+                    ->orderBy('tgl_laporan', 'DESC')
+                    ->get();
+            } else {
+                $data = Laporan::with('product')
+                    ->where('users_id', Auth::user()->id)
+                    ->whereMonth('tgl_laporan', Carbon::now()->month)
+                    ->whereYear('tgl_laporan', Carbon::now()->year)
+                    ->orderBy('tgl_laporan', 'DESC')
+                    ->get();
+            }
+
             return DataTables::of($data)
                 ->addColumn('tgl_laporan', function ($row) {
                     return Carbon::parse($row->tgl_laporan)->translatedFormat('l, d-F-Y');
-                })
-                ->addColumn('title', function ($row) {
-                    return $row->title;
                 })
                 ->addColumn('product', function ($row) {
                     return $row->product->name;
@@ -53,7 +69,7 @@ class LaporanController extends Controller
                 ->addIndexColumn()
                 ->toJson();
         }
-        return view('pages.mahasiswa.laporan.index', compact('product'));
+        return view('pages.mahasiswa.laporan.index', compact('product', 'jadwalTerbaru'));
     }
 
     public function getProducts(Request $request)
@@ -73,14 +89,13 @@ class LaporanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
+            'tgl_laporan' => 'required',
             'products_id' => 'required',
             'product_terjual' => 'required',
             'sisa_stock' => 'required',
             'pendapatan' => 'required',
             'image' => 'required'
         ], [
-            'title.required' => 'Judul laporan harus diisi.',
             'products_id.required' => 'Pilih Product Yang Ingin Di Jadikan Laporan.',
             'product_terjual.required' => 'Jumlah Product Yang Terjual Harus Di isi.',
             'sisa_stock.required' => 'Sisa Stock Produk Yang Ada Harus Di isi.',
@@ -105,9 +120,8 @@ class LaporanController extends Controller
 
         Laporan::create([
             'users_id' => Auth::user()->id,
-            'title' => $request->title,
             'products_id' => $request->products_id,
-            'tgl_laporan' => Carbon::now(),
+            'tgl_laporan' => $request->tgl_laporan,
             'pendapatan' => str_replace('.', '', $request->pendapatan),
             'product_terjual' => $request->product_terjual,
             'stock' => $product->qty,
@@ -134,7 +148,16 @@ class LaporanController extends Controller
 
     public function generatePdf()
     {
-        $data = Laporan::with('product', 'users')->where('users_id', Auth::user()->id)->orderBy('tgl_laporan', 'DESC')->get();
+        $month = Carbon::now()->month;
+        $year = Carbon::now()->year;
+
+        $data = Laporan::with('product', 'users')
+            ->where('users_id', Auth::user()->id)
+            ->whereMonth('tgl_laporan', $month)
+            ->whereYear('tgl_laporan', $year)
+            ->orderBy('tgl_laporan', 'DESC')
+            ->get();
+
         $user = User::where('id', Auth::user()->id)->select('name', 'nim', 'prodi', 'kios')->first();
         $pdf = Pdf::loadView('pdf.laporan', compact('data', 'user'));
         return $pdf->stream('Laporan Penjualan - ' . $user->name . '.pdf');

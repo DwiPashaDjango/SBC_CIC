@@ -4,9 +4,11 @@
     Laporan Penjualan Harian - {{Auth::user()->name}}
 @endsection
 
-@push('js')
+@push('css')
     <link rel="stylesheet" href="{{asset('')}}modules/datatables/datatables.min.css">
     <link rel="stylesheet" href="{{asset('')}}modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{asset('')}}modules/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="{{asset('')}}modules/bootstrap-daterangepicker/daterangepicker.css">
 @endpush
 
 @section('content')
@@ -27,18 +29,32 @@
     @endif
 
     <div class="card card-primary">
-        <div class="card-header">
-            <a href="javascript:void(0)" class="btn btn-primary add"><i class="fas fa-plus"></i> Buat Laporan Baru</a>
-            <a href="{{route('mhs.laporan.generatePdf')}}" target="_blank" class="btn btn-danger ml-3"><i class="fas fa-file-pdf"></i> Unduh Laporan</a>
-        </div>
         <div class="card-body">
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    @if ($jadwalTerbaru && $jadwalTerbaru->status !== 'pending')
+                        @php
+                            $tanggalAkhir = \Carbon\Carbon::parse($jadwalTerbaru->tgl_akhir);
+                            $tanggalSekarang = \Carbon\Carbon::now();
+                        @endphp
+                        @if ($tanggalAkhir->lt($tanggalSekarang))
+                        @else
+                            <a href="javascript:void(0)" class="btn btn-primary add"><i class="fas fa-plus"></i> Buat Laporan Baru</a>
+                        @endif
+                    @endif
+                    <a href="{{route('mhs.laporan.generatePdf')}}" target="_blank" class="btn btn-danger ml-3"><i class="fas fa-file-pdf"></i> Unduh Laporan</a>
+                </div>
+                <div>
+                    <input type="date" name="start_date" id="start_date" class="form-control">
+                </div>
+            </div>
+            <hr class="divide">
             <div class="table-responsive-lg">
                 <table class="table table-bordered table-striped text-center" id="table" style="width: 100%">
                     <thead class="bg-primary">
                         <tr>
                             <th class="text-white text-center">No</th>
                             <th class="text-white text-center">Tanggal Laporan</th>
-                            <th class="text-white text-center">Judul Laporan</th>
                             <th class="text-white text-center">Nama Product</th>
                             <th class="text-white text-center">Stock Barang</th>
                             <th class="text-white text-center">Harga Jual</th>
@@ -64,17 +80,13 @@
             <div class="modal-body">
                 <div class="form-group mb-3">
                     <label for="" class="mb-2">Tanggal</label>
-                    <input type="text" name="" id="" class="form-control" value="{{\Carbon\Carbon::now()->translatedFormat('l, d-F-Y')}}" readonly>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="" class="mb-2">Judul Laporan</label>
-                    <input type="text" name="title" id="title" class="form-control" value="{{old('title')}}">
+                    <input type="text" name="tgl_laporan" id="tgl_laporan" class="form-control datepicker" value="{{\Carbon\Carbon::now()->translatedFormat('Y-m-d')}}">
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="form-group mb-3">
                             <label for="" class="mb-2">Product Yang Di Jual</label>
-                            <select name="products_id" id="products_id" class="form-control">
+                            <select name="products_id" id="products_id" class="form-control select2" id="select2" style="width: 100%">
                                 <option value="">- Pilih -</option>
                                 @foreach ($product as $pd)
                                     <option value="{{$pd->id}}" {{$pd->id == old('products_id') ? 'selected' : ''}}>{{$pd->name}}</option>
@@ -150,6 +162,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('')}}modules/datatables/datatables.min.js"></script>
     <script src="{{asset('')}}modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="{{asset('')}}modules/select2/dist/js/select2.full.min.js"></script>
+    <script src="{{asset('')}}modules/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script>
         function inputRupiah(angka, prefix){
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
@@ -171,11 +185,15 @@
             let table = $("#table").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{url('mahasiswa/laporans/list')}}",
+                ajax: {
+                    url: "{{url('mahasiswa/laporans/list')}}",
+                    data: function(d) {
+                        d.start_date = $('#start_date').val();
+                    }
+                },
                 columns: [
                     {data: "DT_RowIndex"},
                     {data: "tgl_laporan"},
-                    {data: "title"},
                     {data: "product"},
                     {data: "stock"},
                     {data: "harga_jual"},
@@ -185,6 +203,10 @@
                     {data: "action"},
                 ]
             });
+
+            $("#start_date").change(function() {
+                table.draw()
+            })
 
             $(".add").click(function(e) {
                 e.preventDefault();

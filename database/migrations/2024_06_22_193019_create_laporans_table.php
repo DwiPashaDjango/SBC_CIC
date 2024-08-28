@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('users_id');
             $table->foreignId('products_id');
-            $table->string('title');
-            $table->timestamp('tgl_laporan');
+            $table->date('tgl_laporan');
             $table->integer('product_terjual');
             $table->double('pendapatan');
+            $table->integer('stock');
             $table->integer('sisa_stock');
             $table->string('image');
             $table->timestamps();

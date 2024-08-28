@@ -57,7 +57,6 @@
         <tr>
             <th style="text-align: center;">No</th>
             <th style="text-align: center;">Tanggal Laporan</th>
-            <th style="text-align: center;">Judul Laporan</th>
             <th style="text-align: center;">Nama Produk</th>
             <th style="text-align: center;">Stock Barang</th>
             <th style="text-align: center;">Harga Jual</th>
@@ -70,7 +69,6 @@
                 <tr>
                     <td>{{$loop->iteration}}</td>
                     <td>{{\Carbon\Carbon::parse($item->tgl_laporan)->translatedFormat('d F Y')}}</td>
-                    <td>{{$item->title}}</td>
                     <td>{{$item->product->name}}</td>
                     <td>{{$item->stock}}</td>
                     <td>{{number_format($item->product->harga_jual, 2)}}</td>
@@ -81,7 +79,7 @@
             @endforeach
             <tr>
                 <th colspan="7" style="text-align: center;">Total Pendapatan</th>
-                <th style="text-align: center;" colspan="2">Rp. {{number_format($data->sum('pendapatan'), 2)}}</th>
+                <th style="text-align: center;" colspan="1">Rp. {{number_format($data->sum('pendapatan'), 2)}}</th>
             </tr>
         @else
             <tr>

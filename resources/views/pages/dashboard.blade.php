@@ -5,7 +5,7 @@
 @endpush
 
 @section('title')
-    Dashboard
+    Home
 @endsection
 
 @section('content')
@@ -88,7 +88,7 @@
             <div class="col-lg-6 col-md-12">
                 <div class="card">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Grafik Penjualan</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Grafik Pendapatan Perbulan</h6>
                         <div class="dropdown no-arrow">
                         <a class="dropdown-toggle btn btn-primary btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Filter 
@@ -243,52 +243,40 @@
 
             function fetchJadwalMonth(years) {
                 $.ajax({
-                    url: "{{route('getJadwalPengajuan')}}",
+                    url: "{{route('getJadwalPendapatan')}}",
                     method: 'POST',
                     data: {years: years},
                     dataType: 'json',
                     success: function(data) {
+                        console.log(data);
                         if(window.myChart instanceof Chart)
                         {
                             window.myChart.destroy();
                         }
 
-                        const monthsSales = data.sales.map(entry => entry.month);
-                        const countsSales = data.sales.map(entry => entry.count);
-                        const countsNotSales = data.not_sales.map(entry => entry.count);
+                        const monthIncome = data.income.map(entry => entry.month);
+                        const income = data.income.map(entry => entry.income);
 
                         var ctx = document.getElementById('chart-penjualan').getContext('2d');
                         window.myChart = new Chart(ctx, {
                             type: 'line',
                             data: {
-                                labels: monthsSales.map(month => getMonthName(month)),
+                                labels: monthIncome.map(month => getMonthName(month)),
                                 datasets: [
-                                        {
-                                            label: 'Jumlah Mahasiswa Berjualan',
-                                            data: countsSales,
-                                            backgroundColor: 'rgba(63,82,227,.8)',
-                                            borderWidth: 0,
-                                            borderColor: 'transparent',
-                                            pointBorderWidth: 0,
-                                            pointRadius: 3.5,
-                                            pointBackgroundColor: 'transparent',
-                                            pointHoverBackgroundColor: 'rgba(63,82,227,.8)',
-                                        },
-                                        {
-                                            label: 'Jumlah Mahasiswa Tidak Bisa Berjualan',
-                                            data: countsNotSales,
-                                            borderWidth: 2,
-                                            backgroundColor: 'rgba(254,86,83,.7)',
-                                            borderWidth: 0,
-                                            borderColor: 'transparent',
-                                            pointBorderWidth: 0,
-                                            pointRadius: 3.5,
-                                            pointBackgroundColor: 'transparent',
-                                            pointHoverBackgroundColor: 'rgba(254,86,83,.7)',
-                                        }
-                                    ]
+                                    {
+                                        label: 'Grafik Pendapatan Perbulan',
+                                        data: income,
+                                        backgroundColor: 'rgba(63,82,227,.8)',
+                                        borderWidth: 0,
+                                        borderColor: 'transparent',
+                                        pointBorderWidth: 0,
+                                        pointRadius: 3.5,
+                                        pointBackgroundColor: 'transparent',
+                                        pointHoverBackgroundColor: 'rgba(63,82,227,.8)',
+                                    }
+                                ]
                             },
-                        options: {
+                            options: {
                                 animations: {
                                     tension: {
                                         duration: 1000,
@@ -308,7 +296,6 @@
                                         ticks: {
                                             steps: 10,
                                             stepValue: 5,
-                                            max: data.mhs
                                         }
                                     }]
                                 }

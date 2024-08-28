@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jadwal;
+use App\Models\Laporan;
 use App\Models\Stand;
 use App\Models\User;
 use Carbon\Carbon;
@@ -31,50 +32,27 @@ class DashboardController extends Controller
         }
     }
 
-    public function getJadwalPengajuan(Request $request)
+    public function getJadwalPendapatan(Request $request)
     {
         $year = $request->years;
         $months = range(1, 12);
-        $datas = Jadwal::where('status', 'completed')
-            ->where('is_repeat', 'tidak')
-            ->where('stands_id', '!=', null)
-            ->select(DB::raw('MONTH(tgl_penjualan) as month'), DB::raw('COUNT(*) as count'))
-            ->whereYear('tgl_penjualan', $year)
+
+        $datas = Laporan::select(DB::raw('MONTH(tgl_laporan) as month'), DB::raw('COUNT(*) as count'), DB::raw('SUM(pendapatan) as income'))
+            ->whereYear('tgl_laporan', $year)
             ->groupBy('month')
             ->get();
 
-        $notSale = Jadwal::where('status', 'tidak')
-            ->where('is_repeat', 'ya')
-            ->where('stands_id', '=', null)
-            ->select(DB::raw('MONTH(tgl_penjualan) as month'), DB::raw('COUNT(*) as count'))
-            ->whereYear('tgl_penjualan', $year)
-            ->groupBy('month')
-            ->get();
-
-
-        $mhs = User::role('Mahasiswa')->whereYear('created_at', (int)$year)->count();
-
-        $sales = [];
+        $results = [];
         foreach ($months as $month) {
-            $data = $datas->where('month', $month)->first();
+            $income = $datas->where('month', $month)->first();
 
-            $sales[] = [
-                'month' => $month,
-                'count' => $data ? $data->count : 0,
+            $results[] = [
+                'income' => $income ? $income->income : 0,
+                'month' => $month
             ];
         }
 
-        $resultNotSale = [];
-        foreach ($months as $month) {
-            $notSales = $notSale->where('month', $month)->first();
-
-            $resultNotSale[] = [
-                'month' => $month,
-                'count' => $notSales ? $notSales->count : 0,
-            ];
-        }
-
-        return response()->json(['sales' => $sales, 'not_sales' => $resultNotSale, 'mhs' => $mhs]);
+        return response()->json(['income' => $results]);
     }
 
     public function fetchJadwal()

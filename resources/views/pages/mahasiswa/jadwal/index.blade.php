@@ -7,6 +7,7 @@
 @push('js')
     <link rel="stylesheet" href="{{asset('')}}modules/datatables/datatables.min.css">
     <link rel="stylesheet" href="{{asset('')}}modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{asset('')}}modules/bootstrap-daterangepicker/daterangepicker.css">
 @endpush
 
 @section('content')
@@ -48,25 +49,35 @@
 @endsection
 
 @push('modal')
-    <x-modal id="action" size="md">
+    <x-modal id="action" size="lg">
         <div class="modal-body">
             <input type="hidden" name="id" id="id">
             <input type="hidden" name="kategori_products_id" id="kategori_products_id" value="{{Auth::user()->kategori_products}}">
-            <div class="form-group mb-3">
-                <label for="" class="mb-2">Nomor Induk Mahasiswa</label>
-                <input type="text" disabled class="form-control " value="{{Auth::user()->nim}}">
-            </div>
-            <div class="form-group mb-3">
-                <label for="" class="mb-2">Nama Mahasiswa</label>
-                <input type="text" disabled class="form-control " value="{{Auth::user()->name}}">
-            </div>
-            <div class="form-group mb-3">
-                <label for="" class="mb-2">Kios</label>
-                <input type="text" disabled class="form-control " value="{{Auth::user()->kios}}">
-            </div>
-            <div class="form-group mb-3">
-                <label for="" class="mb-2">Kategori Makanan Yang Di Jual</label>
-                <input type="text" disabled class="form-control " value="{{Auth::user()->kategori_product->name}}">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                        <label for="" class="mb-2">Nomor Induk Mahasiswa</label>
+                        <input type="text" disabled class="form-control " value="{{Auth::user()->nim}}">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                        <label for="" class="mb-2">Nama Mahasiswa</label>
+                        <input type="text" disabled class="form-control " value="{{Auth::user()->name}}">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                        <label for="" class="mb-2">Kios</label>
+                        <input type="text" disabled class="form-control " value="{{Auth::user()->kios}}">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                        <label for="" class="mb-2">Kategori Makanan Yang Di Jual</label>
+                        <input type="text" disabled class="form-control " value="{{Auth::user()->kategori_product->name}}">
+                    </div>
+                </div>
             </div>
             <div class="form-group mb-3">
                 <label for="" class="mb-2">Tanggal Penjualan</label>
@@ -85,6 +96,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('')}}modules/datatables/datatables.min.js"></script>
     <script src="{{asset('')}}modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="{{asset('')}}modules/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script>
         let table = $(document).ready(function() {
             let table = $("#table").DataTable({
@@ -186,7 +198,6 @@
                     },
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data);
                         if (data.errors) {
                             $.each(data.errors, function(index, value) {
                                 $(".tgl_penjualan").addClass('is-invalid');

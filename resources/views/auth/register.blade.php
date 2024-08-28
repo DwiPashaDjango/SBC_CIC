@@ -11,6 +11,7 @@
 
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="{{asset('')}}modules/jquery-selectric/selectric.css">
+  <link rel="stylesheet" href="{{asset('')}}modules/select2/dist/css/select2.min.css">
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{asset('')}}css/style.css">
@@ -43,7 +44,7 @@
                 <form method="POST" action="{{route('register.post')}}">
                     @csrf
                   <div class="row">
-                    <div class="form-group col-6">
+                    <div class="form-group col-lg-6">
                       <label for="nim">Nomor Induk Mahasiswa <span class="text-danger">*</span></label>
                       <input id="nim" type="number" class="form-control @error('nim') is-invalid @enderror" name="nim" value="{{old('nim')}}">
                       @error('nim')
@@ -52,7 +53,7 @@
                           </span>   
                       @enderror
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group col-lg-6">
                       <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
                       <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}">
                         @error('name')
@@ -73,14 +74,28 @@
                     @enderror
                   </div>
 
-                  <div class="form-group">
-                    <label for="email">Prodi/Hima <span class="text-danger">*</span></label>
-                    <input id="text" type="text" class="form-control @error('prodi') is-invalid @enderror" name="prodi" value="{{old('prodi')}}">
-                    @error('prodi')
-                        <span class="invalid-feedback">
-                        {{$message}}
-                        </span>   
-                    @enderror
+                  <div class="form-group mb-3">
+                      <label for="prodi" class="mb-2">Prodi/Hima <span class="text-danger">*</span></label>
+                      <select id="prodi" class="form-control selectric @error('prodi') is-invalid @enderror" name="prodi">
+                          <option value="">- Pilih -</option>
+                          <optgroup label="Fakultas Teknologi Informasi">
+                            <option value="teknik informatika" {{ old('prodi') == 'teknik informatika' ? 'selected' : '' }}>Teknik Informatika</option>
+                            <option value="sistem informasi" {{ old('prodi') == 'sistem informasi' ? 'selected' : '' }}>Sistem Informasi</option>
+                            <option value="desain komunikasi visual" {{ old('prodi') == 'desain komunikasi visual' ? 'selected' : '' }}>Desain Komunikasi Visual</option>
+                            <option value="manajeman informatika" {{ old('prodi') == 'manajeman informatika' ? 'selected' : '' }}>Manajeman Informatika</option>
+                            <option value="komputerisasi akuntansi" {{ old('prodi') == 'komputerisasi akuntansi' ? 'selected' : '' }}>Komputerisasi Akuntansi</option>
+                          </optgroup>
+                          <optgroup label="Fakultas Ekonomi Bisnis">
+                            <option value="manajemen" {{ old('prodi') == 'manajemen' ? 'selected' : '' }}>Manajemen</option>
+                            <option value="akuntansi" {{ old('prodi') == 'akuntansi' ? 'selected' : '' }}>Akuntansi</option>
+                            <option value="manajemen bisnis" {{ old('prodi') == 'manajemen bisnis' ? 'selected' : '' }}>Manajemen Bisnis</option>
+                          </optgroup>
+                      </select>
+                      @error('prodi')
+                          <span class="invalid-feedback">
+                              {{$message}}
+                          </span>   
+                      @enderror
                   </div>
 
                   <div class="form-group">
@@ -95,7 +110,7 @@
 
                     <div class="form-group">
                         <label>Jenis Makana Yang Di Jual <span class="text-danger">*</span></label>
-                        <select class="form-control @error('kategori_products') is-invalid @enderror" name="kategori_products">
+                        <select class="form-control selectric @error('kategori_products') is-invalid @enderror" name="kategori_products">
                             <option value="">- Pilih -</option>
                             @foreach ($kategori as $item)
                                 <option value="{{$item->id}}" {{old('kategori_products') == $item->id ? 'selected' : ''}}>{{$item->name}}</option>
@@ -109,7 +124,7 @@
                     </div>
 
                   <div class="row">
-                    <div class="form-group col-6">
+                    <div class="form-group col-lg-6">
                       <label for="password" class="d-block">Password <span class="text-danger">*</span></label>
                       <input id="password" type="password" class="form-control pwstrength @error('password') is-invalid @enderror" data-indicator="pwindicator" name="password">
                       <div id="pwindicator" class="pwindicator">
@@ -122,7 +137,7 @@
                             </span>   
                         @enderror
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group col-lg-6">
                       <label for="password2" class="d-block">Konfirmasi Password <span class="text-danger">*</span></label>
                       <input id="password2" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation">
                         @error('password_confirmation')
@@ -172,6 +187,7 @@
   <!-- JS Libraies -->
   <script src="{{asset('')}}modules/jquery-pwstrength/jquery.pwstrength.min.js"></script>
   <script src="{{asset('')}}modules/jquery-selectric/jquery.selectric.min.js"></script>
+  <script src="{{asset('')}}modules/select2/dist/js/select2.full.min.js"></script>
 
   <!-- Page Specific JS File -->
   <script src="{{asset('')}}js/page/auth-register.js"></script>

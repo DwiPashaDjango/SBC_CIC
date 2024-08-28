@@ -39,7 +39,7 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['role:Admin|Mahasiswa']);
-    Route::post('/getChart', [DashboardController::class, 'getJadwalPengajuan'])->name('getJadwalPengajuan')->middleware(['role:Admin']);
+    Route::post('/getChartIncome', [DashboardController::class, 'getJadwalPendapatan'])->name('getJadwalPendapatan')->middleware(['role:Admin']);
 
     Route::prefix('admin')->group(function () {
         Route::prefix('jadwals')->group(function () {
@@ -62,9 +62,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::prefix('/reports')->group(function () {
             Route::get('/', [ShowLaporanController::class, 'index'])->name('admin.laporan.index')->middleware(['role:Admin']);
-            Route::get('/pdf/{month}/{year}', [ShowLaporanController::class, 'reportMonth'])->name('admin.laporan.generatePdf2')->middleware(['role:Admin']);
-            Route::get('/{id}/show', [ShowLaporanController::class, 'show'])->name('admin.laporan.show')->middleware(['role:Admin']);
-            Route::get('/{id}/pdf', [ShowLaporanController::class, 'generatePdf'])->name('admin.laporan.generatePdf')->middleware(['role:Admin']);
+            Route::get('/{id}/{month}/{years}/list', [ShowLaporanController::class, 'show'])->name('admin.laporan.show')->middleware(['role:Admin']);
+            Route::get('/{id}/{month}/{years}/pdf', [ShowLaporanController::class, 'generatePdf'])->name('admin.laporan.generatePdf')->middleware(['role:Admin']);
         });
     });
 

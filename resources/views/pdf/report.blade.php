@@ -2,39 +2,12 @@
 <html>
 
 <head>
-    <title>Laporan Penjualan Bulan {{$month}} Tahun {{$year}}</title>
+    <title>Laporan Penjualan Mahasiswa {{$report[0]->users->name}} Bulan {{$month}} Tahun {{$years}}</title>
+    <link rel="stylesheet" href="{{public_path('css/style.css')}}">
+    <link rel="stylesheet" href="{{public_path('modules/bootstrap/css/bootstrap.min.css')}}">
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-
-        #customers {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        
-        #customers td,
-        #customers th {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center
-        }
-        
-        #customers tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        
-        #customers tr:hover {
-            background-color: #ddd;
-        }
-        
-        #customers th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #6777ef;
-            color: white;
         }
 
         .footer {
@@ -50,46 +23,52 @@
 </head>
 
 <body>
-    <img src="{{public_path('kop_surat.jpg')}}" alt="">
-    <hr>
-    <h3 style="text-align: center; padding-top: 20px">Laporan Penjualan Mahasiswa Bulan {{$month}} Tahun {{$year}}</h3>
-    <table id="customers">
-        <tr>
-            <th style="text-align: center;">No</th>
-            <th style="text-align: center;">Mahasiswa</th>
-            <th style="text-align: center;">Tanggal Laporan</th>
-            <th style="text-align: center;">Nama Produk</th>
-            <th style="text-align: center;">Stock</th>
-            <th style="text-align: center;">Harga Jual</th>
-            <th style="text-align: center;">Terjual</th>
-            <th style="text-align: center;">Pendapatan</th>
-            <th style="text-align: center;">Sisa Stock</th>
-        </tr>
-        @php
-            $no = 1;
-        @endphp
-        @forelse ($datas->groupBy('users_id') as $userId => $userData)
-            @php $rowspan = count($userData); @endphp
-            @foreach ($userData as $index => $item)
+    <img src="{{public_path('kop_surat_3.jpg')}}" style="width: 100%">
+    <hr class="divide" style="border-top: 3px solid #000;">
+
+    <h5 class="text-center mt-5">Laporan Penjualan Mahasiswa {{$report[0]->users->name}} Bulan {{$month}} Tahun {{$years}}</h5>
+
+     <table class="table table-bordered table-striped text-center mt-3" id="table" style="width: 100%">
+        <thead class="bg-primary">
+            <tr>
+                <th class="text-white text-center">No</th>
+                <th class="text-white text-center">Tanggal Laporan</th>
+                <th class="text-white text-center">Nama Product</th>
+                <th class="text-white text-center">Stock Barang</th>
+                <th class="text-white text-center">Harga Jual</th>
+                <th class="text-white text-center">Terjual</th>
+                <th class="text-white text-center">Sisa Stock</th>
+                <th class="text-white text-center">Pendapatan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($report as $item)
                 <tr>
-                    @if ($index == 0)
-                        <td rowspan="{{$rowspan}}">{{$no++}}</td>
-                        <td rowspan="{{ $rowspan }}">{{ $item->users->name }}</td>
-                    @endif
-                    <td>{{\Carbon\Carbon::parse($item->tgl_laporan)->translatedFormat('l, d F Y')}}</td>
+                    <td>{{$loop->iteration}}</td>
+                    <td>
+                        {{\Carbon\Carbon::parse($item->tgl_laporan)->translatedFormat('d F Y')}}
+                    </td>
                     <td>{{$item->product->name}}</td>
                     <td>{{$item->stock}}</td>
                     <td>{{number_format($item->product->harga_jual, 2)}}</td>
                     <td>{{$item->product_terjual}}</td>
-                    <td>{{number_format($item->pendapatan, 2)}}</td>
                     <td>{{$item->sisa_stock}}</td>
+                    <td>{{number_format($item->pendapatan, 2)}}</td>
                 </tr>
-            @endforeach
-        @empty 
+            @empty
+                <tr>
+                    <td colspan="8">Tidak Ada Data Laporan Penjualan Di Bulan {{$month}} Tahun {{$years}}</td>
+                </tr>
+            @endforelse
+        </tbody>
+        <tfoot class="bg-primary">
             <tr>
-                <td colspan="9">Tidak Ada Laporan Penjualan Mahasiswa {{$month}} Tahun {{$year}}</td>
+                <th colspan="6" class="text-white">Total Pendapatan</th>
+                <th colspan="2" class="text-white">
+                    Rp. {{number_format($report->sum('pendapatan'), 2)}}
+                </th>
             </tr>
-        @endforelse
+        </tfoot>
     </table>
 
     <div class="footer">

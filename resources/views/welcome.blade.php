@@ -77,7 +77,7 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item {{request()->is('/') ? 'active-nav' : ''}}">
+                        <li class="nav-item">
                             <a href="{{route('home')}}" class="nav-link"><i class="fas fa-home" style="margin-right: 10px"></i><span>Beranda</span></a>
                         </li>
                         @auth

@@ -68,13 +68,6 @@
     </div>
 
     <div class="card">
-        <div class="card-header">
-            @if (!empty($month) && !empty($year))
-                <a href="{{route('admin.laporan.generatePdf2', ['month' => $month, 'year' => $years])}}" target="_blank" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a>
-            @else
-                <a href="{{route('admin.laporan.generatePdf2', ['month' => \Carbon\Carbon::now()->month, 'year' => \Carbon\Carbon::now()->year])}}" target="_blank" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a>
-            @endif
-        </div>
         <div class="card-body">
             <div class="mb-3 text-center">
                 @if (!empty($month) && !empty($year))
@@ -88,39 +81,39 @@
                     <tr>
                         <th class="text-white text-center">No</th>
                         <th class="text-white text-center">Mahasiswa</th>
-                        <th class="text-white text-center">Tanggal Laporan</th>
-                        <th class="text-white text-center">Nama Produk</th>
-                        <th class="text-white text-center">Stock</th>
-                        <th class="text-white text-center">Harga Jual</th>
-                        <th class="text-white text-center">Terjual</th>
-                        <th class="text-white text-center">Pendapatan</th>
-                        <th class="text-white text-center">Sisa Stock</th>
+                        <th class="text-white text-center">Nomor Induk Mahasiswa</th>
+                        <th class="text-white text-center">Prodi/Hima</th>
+                        <th class="text-white text-center">Kios</th>
+                        <th class="text-white text-center">#</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $no = 1;
-                    @endphp
-                    @forelse ($datas->groupBy('users_id') as $userId => $userData)
-                        @php $rowspan = count($userData); @endphp
-                        @foreach ($userData as $index => $item)
-                            <tr>
-                                @if ($index == 0)
-                                    <td rowspan="{{$rowspan}}">{{$no++}}</td>
-                                    <td rowspan="{{ $rowspan }}">{{ $item->users->name }}</td>
-                                @endif
-                                <td>{{\Carbon\Carbon::parse($item->tgl_laporan)->translatedFormat('l, d F Y')}}</td>
-                                <td>{{$item->product->name}}</td>
-                                <td>{{$item->stock}}</td>
-                                <td>{{number_format($item->product->harga_jual, 2)}}</td>
-                                <td>{{$item->product_terjual}}</td>
-                                <td>{{number_format($item->pendapatan, 2)}}</td>
-                                <td>{{$item->sisa_stock}}</td>
-                            </tr>
-                        @endforeach
-                    @empty 
+                    @forelse ($jadwals as $item)
                         <tr>
-                            <td colspan="9">Tidak Ada Laporan Penjualan Mahasiswa Bulan {{$month}} Tahun {{$years}}</td>
+                            <td>{{$loop->iteration}}</td>
+                            <td>
+                                {{$item->user->name}}
+                            </td>
+                            <td>
+                                {{$item->user->nim}}
+                            </td>
+                            <td>
+                                {{$item->user->prodi}}
+                            </td>
+                            <td>
+                                {{$item->user->kios}}
+                            </td>
+                            <td>
+                                @if (!empty($month) && !empty($years))
+                                    <a href="{{route('admin.laporan.show', ['month' => $month, 'years' => $years, 'id' => $item->user->id])}}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
+                                @else
+                                    <a href="{{route('admin.laporan.show', ['month' => \Carbon\Carbon::now()->month, 'years' => \Carbon\Carbon::now()->year, 'id' => $item->user->id])}}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6">Tidak Ada Data</td>
                         </tr>
                     @endforelse
                 </tbody>
