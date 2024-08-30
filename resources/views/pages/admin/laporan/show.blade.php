@@ -10,9 +10,14 @@
 @section('content')
     <div class="card card-primary">
         <div class="card-header">
-            <a href="{{route('admin.laporan.generatePdf', ['id' => $report[0]->users->id, 'month' => $month, 'years' => $years])}}" class="btn btn-danger"><i class="fas fa-file-pdf"></i></a>
+            <a href="{{route('admin.laporan.generatePdf', ['id' => $report[0]->users->id, 'month' => $month, 'years' => $years])}}" class="btn btn-danger">
+                <i class="fas fa-file-pdf"></i>
+                Unduh PDF
+            </a>
         </div>
         <div class="card-body">
+            <h5 class="text-center">Laporan Penjualan {{$report[0]->users->name}} Bulan {{$month}} Tahun {{$years}}</h5>
+            <hr class="divide">
             <div class="table-responsive-lg">
                 <table class="table table-bordered table-striped text-center" id="table" style="width: 100%">
                     <thead class="bg-primary">

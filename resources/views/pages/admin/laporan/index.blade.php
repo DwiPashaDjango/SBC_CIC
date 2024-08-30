@@ -76,6 +76,7 @@
                     <h5>Laporan Penjualan Mahasiswa Bulan {{\Carbon\Carbon::now()->month}} Tahun {{\Carbon\Carbon::now()->year}}</h5>
                 @endif
             </div>
+            <hr class="divide">
             <table class="table table-bordered table-striped text-center" id="table" style="width: 100%">
                 <thead class="bg-primary">
                     <tr>
