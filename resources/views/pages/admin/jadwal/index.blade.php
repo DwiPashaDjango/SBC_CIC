@@ -7,8 +7,8 @@
 @push('js')
     <link rel="stylesheet" href="{{asset('')}}modules/datatables/datatables.min.css">
     <link rel="stylesheet" href="{{asset('')}}modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="{{asset('')}}modules/summernote/summernote-bs4.css">
     <link rel="stylesheet" href="{{asset('')}}modules/jquery-selectric/selectric.css">
+    <link rel="stylesheet" href="{{asset('')}}modules/bootstrap-daterangepicker/daterangepicker.css">
 @endpush
 
 @section('content')
@@ -17,6 +17,20 @@
     </div>
     <div class="card card-primary">
         <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <input type="month" name="start_date" id="start_date" class="form-control date">
+                </div>
+                <div>
+                    <select name="status" id="status" class="form-control">
+                        <option value="">Semua</option>
+                        <option value="completed">Bisa Berjualan</option>
+                        <option value="paid">Menunggu Konfirmasi</option>
+                        <option value="tidak">Tidak Bisa Berjualan</option>
+                    </select>
+                </div>
+            </div>
+            <hr class="divide">
             <div class="table-responsive-lg">
                 <table class="table table-bordered table-striped text-center" id="table" style="width: 100%">
                     <thead class="bg-primary">
@@ -111,17 +125,24 @@
 
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{asset('')}}modules/jquery-selectric/jquery.selectric.min.js"></script>
     <script src="{{asset('')}}js/page/auth-register.js"></script>
-    <script src="{{asset('')}}modules/summernote/summernote-bs4.js"></script>
     <script src="{{asset('')}}modules/datatables/datatables.min.js"></script>
     <script src="{{asset('')}}modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="{{asset('')}}modules/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="{{asset('')}}modules/jquery-selectric/jquery.selectric.min.js"></script>
     <script>
         $(document).ready(function() {
             let table = $("#table").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{route('admin.jadwal.index')}}",
+                ajax: {
+                    url: "{{route('admin.jadwal.index')}}",
+                    method: "GET",
+                    data: function(d) {
+                        d.start_date = $("#start_date").val(),
+                        d.status = $("#status").val()
+                    }
+                },
                 columns: [
                     {data: "DT_RowIndex"},
                     {data: "nama"},
@@ -133,6 +154,14 @@
                     {data: "action"},
                 ]
             });
+
+            $("#start_date").change(function() {
+                table.draw()
+            })
+
+            $("#status").change(function() {
+                table.draw()
+            })
 
             $(document).on('click', '#confirm', function(e) {
                 e.preventDefault();

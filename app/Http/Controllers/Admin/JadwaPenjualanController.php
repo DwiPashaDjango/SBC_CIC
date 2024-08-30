@@ -18,10 +18,26 @@ class JadwaPenjualanController extends Controller
     public function index()
     {
         if (request()->ajax()) {
+            $start_date = request('start_date');
+            $status = request('status');
+
             $data = Jadwal::with('user.kategori_product', 'stand')
-                ->where('is_repeat', '=', 'tidak')
-                ->orderBy('id', 'DESC')->get();
-            return DataTables::of($data)
+                ->where('is_repeat', '=', 'tidak');
+
+            if (!empty($start_date)) {
+                $month = Carbon::parse($start_date)->month;
+                $year = Carbon::parse($start_date)->year;
+
+                $data->whereMonth('tgl_penjualan', $month)->whereYear('tgl_penjualan', $year);
+            }
+
+            if (!empty($status)) {
+                $data->where('status', $status);
+            }
+
+            $datas = $data->orderBy('id', 'DESC')->get();
+
+            return DataTables::of($datas)
                 ->addColumn('nama', function ($row) {
                     return $row->user->name;
                 })

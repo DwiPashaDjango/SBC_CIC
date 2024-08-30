@@ -259,7 +259,7 @@
 
                         var ctx = document.getElementById('chart-penjualan').getContext('2d');
                         window.myChart = new Chart(ctx, {
-                            type: 'line',
+                            type: 'bar',
                             data: {
                                 labels: monthIncome.map(month => getMonthName(month)),
                                 datasets: [
